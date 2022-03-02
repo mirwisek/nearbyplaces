@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_restaurants">
+
+    <fragment
+        android:id="@+id/navigation_restaurants"
+        android:name="com.adyen.android.assignment.ui.HomeFragment"
+        android:label="@string/title_restaurants"
+        tools:layout="@layout/fragment_pager" >
+        <argument
+            android:name="@string/arg_category"
+            app:argType="reference"
+            android:defaultValue="@string/title_restaurants" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_health"
+        android:name="com.adyen.android.assignment.ui.HomeFragment"
+        android:label="@string/title_health"
+        tools:layout="@layout/fragment_pager">
+        <argument
+            android:name="@string/arg_category"
+            app:argType="reference"
+            android:defaultValue="@string/title_health" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_travel"
+        android:name="com.adyen.android.assignment.ui.HomeFragment"
+        android:label="@string/title_travel"
+        tools:layout="@layout/fragment_pager">
+        <argument
+            android:name="@string/arg_category"
+            app:argType="reference"
+            android:defaultValue="@string/title_travel" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_business"
+        android:name="com.adyen.android.assignment.ui.HomeFragment"
+        android:label="@string/title_business"
+        tools:layout="@layout/fragment_pager">
+        <argument
+            android:name="@string/arg_category"
+            app:argType="reference"
+            android:defaultValue="@string/title_business" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_outdoor"
+        android:name="com.adyen.android.assignment.ui.HomeFragment"
+        android:label="@string/title_outdoor"
+        tools:layout="@layout/fragment_pager">
+        <argument
+            android:name="@string/arg_category"
+            app:argType="reference"
+            android:defaultValue="@string/title_outdoor" />
+    </fragment>
+
+</navigation>

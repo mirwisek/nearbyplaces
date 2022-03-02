@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/restaurants"
+        android:icon="@drawable/ic_restaurant"
+        android:title="@string/title_restaurants" />
+
+    <item
+        android:id="@+id/health"
+        android:icon="@drawable/ic_health"
+        android:title="@string/title_health" />
+
+    <item
+        android:id="@+id/travel"
+        android:icon="@drawable/ic_travel"
+        android:title="@string/title_travel" />
+
+    <item
+        android:id="@+id/business"
+        android:icon="@drawable/ic_business"
+        android:title="@string/title_business" />
+
+    <item
+        android:id="@+id/outdoor"
+        android:icon="@drawable/ic_outdoor"
+        android:title="@string/title_outdoor" />
+
+</menu>

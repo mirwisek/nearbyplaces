@@ -11,6 +11,7 @@ import retrofit2.http.QueryMap
 
 
 interface PlacesService {
+
     /**
      * Get venue recommendations.
      *
@@ -20,7 +21,8 @@ interface PlacesService {
     @GET("places/nearby")
     fun getVenueRecommendations(@QueryMap query: Map<String, String>): Call<ResponseWrapper>
 
-    companion object  {
+    companion object {
+
         private val retrofit by lazy {
             Retrofit.Builder()
                 .baseUrl(BuildConfig.FOURSQUARE_BASE_URL)
