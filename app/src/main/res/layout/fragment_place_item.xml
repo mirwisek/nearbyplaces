@@ -18,47 +18,65 @@
         android:padding="10dp">
 
         <ImageView
+            android:id="@+id/ivThumbnailBackground"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/tvDistance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvName" />
+
+        <ImageView
             android:id="@+id/ivThumbnail"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="10dp"
             android:src="@drawable/ic_image_placeholder"
-            app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintTop_toTopOf="@id/tvName"
-            app:layout_constraintBottom_toBottomOf="@id/tvDistance"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/ivThumbnailBackground"
+            app:layout_constraintEnd_toEndOf="@id/ivThumbnailBackground"
+            app:layout_constraintStart_toStartOf="@id/ivThumbnailBackground"
+            app:layout_constraintTop_toTopOf="@id/ivThumbnailBackground" />
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintStart_toEndOf="@id/ivThumbnail"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            app:layout_constraintBottom_toTopOf="@+id/tvAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@id/ivThumbnailBackground"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="Name" />
 
         <TextView
             android:id="@+id/tvAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginTop="5dp"
-            app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintEnd_toEndOf="@id/tvName"
-            app:layout_constraintTop_toBottomOf="@id/tvName"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tvDistance"
+            app:layout_constraintEnd_toEndOf="@id/tvName"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@+id/tvName"
             tools:text="Address" />
 
         <TextView
             android:id="@+id/tvDistance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintEnd_toEndOf="@id/tvName"
-            app:layout_constraintTop_toBottomOf="@id/tvAddress"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            tools:text="Distance: 9.2 mi" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tvName"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+            tools:text="Distance: 9.2m" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

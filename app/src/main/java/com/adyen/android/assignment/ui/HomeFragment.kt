@@ -9,87 +9,98 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.android.assignment.viewmodels.PlacesViewModel
-import com.adyen.android.assignment.model.PlaceState
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.adyen.android.assignment.api.model.Result
 import com.adyen.android.assignment.databinding.HomeFragmentBinding
 import com.adyen.android.assignment.gone
 import com.adyen.android.assignment.log
+import com.adyen.android.assignment.model.PlaceState
+import com.adyen.android.assignment.utils.ImageUtils
+import com.adyen.android.assignment.viewmodels.PlacesViewModel
 import com.adyen.android.assignment.visible
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
-    private var category: Int? = null
     private val viewModel: PlacesViewModel by activityViewModels()
-    private lateinit var binding: HomeFragmentBinding
+    private lateinit var placesAdapter: PlacesRecyclerViewAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private var _binding: HomeFragmentBinding? = null
 
-        arguments?.let { args ->
-            category = args.getInt(KEY_CATEGORY)
-        }
-    }
+    // The assertion is made because during usage inside onCreateView it's not null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = HomeFragmentBinding.inflate(layoutInflater, container, false)
+        _binding = HomeFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val activity = requireActivity() as MainActivity
+
+        placesAdapter =
+            PlacesRecyclerViewAdapter(ImageUtils.getIconSize(requireContext())) { placeClicked ->
+                activity.onPlaceClicked(placeClicked)
+            }
+        with(binding.list) {
+            adapter = placesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+
         // Ensure that we don't use resources in the background
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                val categoryPlace = getString(category!!)
                 viewModel.state.collect { state ->
-                    when(state) {
+                    when (state) {
                         PlaceState.Idle -> {}
                         PlaceState.Loading -> {
-                            binding.progress.visible()
-                            binding.textHint.gone()
-                        }
-                        is PlaceState.Result -> {
-                            binding.progress.gone()
-                            binding.textHint.visible()
-                            val t = StringBuilder()
-                            viewModel.getFilteredPlaces(categoryPlace).forEach {
-                                log("Received Data:: ${it.name} and ${it.categories[0].id}")
-                                t.append(it.name)
-                                t.append("\n")
-                            }
-                            binding.textHint.text = t.toString()
-                        }
-                        is PlaceState.Error -> {
                             with(binding) {
-                                progress.gone()
-                                textHint.visible()
-                                textHint.text = "Error: ${state.error}"
+                                progress.visible()
+                                textHint.gone()
                             }
                         }
+                        is PlaceState.Result -> renderPlacesResult(state.places)
+                        is PlaceState.Error -> renderError(state.error)
                     }
                 }
             }
         }
     }
 
-    companion object {
-        private const val KEY_CATEGORY = "category"
+    private fun renderError(error: Throwable?) {
+        with(binding) {
+            progress.gone()
+            textHint.visible()
+            textHint.text = "Error: $error"
+        }
+    }
 
-        fun newInstance(targetCategory: Int): HomeFragment {
-            val args = Bundle().apply {
-                putInt(KEY_CATEGORY, targetCategory)
-            }
-
-            return HomeFragment().apply {
-                arguments = args
+    private fun renderPlacesResult(places: List<Result>?) {
+        with(binding) {
+            progress.gone()
+            places?.let { list ->
+                if (list.isEmpty()) {
+                    textHint.text = "No nearby places found!"
+                    textHint.visible()
+                } else {
+                    textHint.gone()
+                    placesAdapter.updateList(list)
+                }
             }
         }
+    }
+
+    // :) Avoid memory leaks
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

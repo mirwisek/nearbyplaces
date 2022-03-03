@@ -2,8 +2,8 @@
     <string name="app_name">Android Assignment</string>
 
     <!-- Mobile Navigation Titles -->
-    <string name="title_restaurants">Restaurants</string>
-    <string name="title_health">Health</string>
+    <string name="title_nearby_places">Nearby Places</string>
+    <string name="title_maps">Map</string>
     <string name="title_travel">Travel</string>
     <string name="title_business">Business</string>
     <string name="title_outdoor">Outdoor</string>
