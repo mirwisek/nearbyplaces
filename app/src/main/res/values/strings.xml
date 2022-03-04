@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android Assignment</string>
+    <string name="app_name">Nearby Places</string>
 
     <!-- Mobile Navigation Titles -->
     <string name="title_nearby_places">Nearby Places</string>
