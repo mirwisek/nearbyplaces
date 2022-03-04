@@ -1,4 +1,4 @@
-package com.adyen.android.assignment.ui
+package com.adyen.android.assignment.ui.adapters
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.Result
 import com.adyen.android.assignment.databinding.FragmentPlaceItemBinding
 import com.adyen.android.assignment.gone
-import com.adyen.android.assignment.log
 import com.adyen.android.assignment.visible
 import com.squareup.picasso.Picasso
 
@@ -35,8 +34,10 @@ class PlacesRecyclerViewAdapter(
 
     override fun getItemCount(): Int = list.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(values: List<Result>) {
         list = values
+        // We could use DiffUtils but to avoid over complicating this project, I would stick to this.
         notifyDataSetChanged()
     }
 
@@ -53,7 +54,12 @@ class PlacesRecyclerViewAdapter(
                     tvAddress.visible()
                     tvAddress.text = placeItem.location.address
                 }
-                tvDistance.text = "${placeItem.distance} meters away"
+                var distance: Float = placeItem.distance.toFloat()
+                if(distance >= 1000) {
+                    distance /= 1000F
+                    tvDistance.text = "%.1f km away".format(distance)
+                } else
+                    tvDistance.text = "${placeItem.distance} m away"
 
                 try {
                     val url = with(placeItem.categories[0].icon) {
@@ -63,7 +69,7 @@ class PlacesRecyclerViewAdapter(
                         .placeholder(R.drawable.ic_image_placeholder)
                         .into(ivThumbnail)
                 } catch (e: IndexOutOfBoundsException) {
-                    log("No categories for this place item: ${placeItem.name}")
+                    // Error caught, no reaction as we have put PlaceHolder Icon
                 }
                 root.setOnClickListener {
                     onClick?.invoke(placeItem)

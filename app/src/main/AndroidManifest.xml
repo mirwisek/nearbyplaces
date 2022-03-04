@@ -4,6 +4,8 @@
     package="com.adyen.android.assignment">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="false"
@@ -16,16 +18,20 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBAMBD9F_NcLK4R8hGt2roBwFzMo9Cj3ZY" />
+            android:value="@string/maps_api_key" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.LocationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

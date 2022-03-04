@@ -14,6 +14,7 @@ import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.Result
 import com.adyen.android.assignment.databinding.FragmentMapsBinding
 import com.adyen.android.assignment.model.PlaceState
+import com.adyen.android.assignment.sharedPrefs
 import com.adyen.android.assignment.toast
 import com.adyen.android.assignment.viewmodels.PlacesViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,7 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -35,7 +35,6 @@ class MapsFragment : Fragment(), OnPlaceItemClickForMapListener {
     private val binding get() = _binding!!
 
     private var map: GoogleMap? = null
-    private val markers = hashMapOf<String, Marker>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,6 +70,13 @@ class MapsFragment : Fragment(), OnPlaceItemClickForMapListener {
                             state.places?.forEach { result ->
                                 drawMarkerOnMap(result)
                             }
+                            // Load location from SharedPreferences and reposition map camera to
+                            // region containing current location of USER
+                            requireContext().sharedPrefs.getString(
+                                MainActivity.KEY_CURRENT_LOCATION, null
+                            )?.let { locationString ->
+                                repositionMapTarget(stringToLatLng(locationString))
+                            }
                         }
                         is PlaceState.Error -> {
                             toast("Error: ${state.error}")
@@ -82,26 +88,13 @@ class MapsFragment : Fragment(), OnPlaceItemClickForMapListener {
     }
 
     private fun drawMarkerOnMap(result: Result) {
-        if(map == null) return
+        if (map == null) return
         val loc = result.geocodes.main
-        val marker = map!!.addMarker(
+        map!!.addMarker(
             MarkerOptions()
                 .position(LatLng(loc.latitude, loc.longitude))
                 .title(result.name)
         )
-        if (marker != null)
-            markers[result.id] = marker
-    }
-
-    override fun onDetach() {
-        (requireActivity() as MainActivity).mapListener = null
-        super.onDetach()
-    }
-
-    // :) Avoid memory leaks
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     override fun showOnMap(placeItem: Result) {
@@ -117,5 +110,30 @@ class MapsFragment : Fragment(), OnPlaceItemClickForMapListener {
             gMap.animateCamera(CameraUpdateFactory.newCameraPosition(target))
         }
     }
+
+    private fun repositionMapTarget(location: LatLng) {
+        val target = CameraPosition.Builder()
+            .target(location)
+            .zoom(12f)
+            .build()
+        map?.moveCamera(CameraUpdateFactory.newCameraPosition(target))
+    }
+
+    private fun stringToLatLng(str: String): LatLng {
+        val location = str.split(",")
+        return LatLng(location[0].toDouble(), location[1].toDouble())
+    }
+
+    override fun onDetach() {
+        (requireActivity() as MainActivity).mapListener = null
+        super.onDetach()
+    }
+
+    // :) Avoid memory leaks
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 }

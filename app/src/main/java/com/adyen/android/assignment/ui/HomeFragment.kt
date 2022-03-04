@@ -1,5 +1,6 @@
 package com.adyen.android.assignment.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.Result
 import com.adyen.android.assignment.databinding.HomeFragmentBinding
 import com.adyen.android.assignment.gone
 import com.adyen.android.assignment.log
 import com.adyen.android.assignment.model.PlaceState
+import com.adyen.android.assignment.ui.adapters.PlacesRecyclerViewAdapter
 import com.adyen.android.assignment.utils.ImageUtils
 import com.adyen.android.assignment.viewmodels.PlacesViewModel
 import com.adyen.android.assignment.visible
@@ -27,7 +30,6 @@ class HomeFragment : Fragment() {
     private lateinit var placesAdapter: PlacesRecyclerViewAdapter
 
     private var _binding: HomeFragmentBinding? = null
-
     // The assertion is made because during usage inside onCreateView it's not null
     private val binding get() = _binding!!
 
@@ -75,6 +77,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun renderError(error: Throwable?) {
         with(binding) {
             progress.gone()
@@ -88,10 +91,15 @@ class HomeFragment : Fragment() {
             progress.gone()
             places?.let { list ->
                 if (list.isEmpty()) {
-                    textHint.text = "No nearby places found!"
+                    textHint.text = getString(R.string.empty_list_message)
                     textHint.visible()
                 } else {
                     textHint.gone()
+                    list.forEach { result ->
+                        val l = result.geocodes.main
+
+                        log("R: ${result.name} :: ${l.latitude}, ${l.longitude} => ${result.location.address}")
+                    }
                     placesAdapter.updateList(list)
                 }
             }
@@ -99,8 +107,8 @@ class HomeFragment : Fragment() {
     }
 
     // :) Avoid memory leaks
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

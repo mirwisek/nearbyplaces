@@ -4,9 +4,13 @@
     <!-- Mobile Navigation Titles -->
     <string name="title_nearby_places">Nearby Places</string>
     <string name="title_maps">Map</string>
-    <string name="title_travel">Travel</string>
-    <string name="title_business">Business</string>
-    <string name="title_outdoor">Outdoor</string>
-    <string name="arg_category">category</string>
+
+
+    <string name="permission_hint">This app uses your location to find places nearby you. Please enable location to continue!</string>
+    <string name="enable_location_btn">Enable Location</string>
+    <string name="location_off_icon">Location Off Icon</string>
+    <string name="location_declined_message">Location permission is required!</string>
+    <string name="permission_action">Allow</string>
+    <string name="empty_list_message">No nearby places found!</string>
 
 </resources>

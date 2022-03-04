@@ -4,6 +4,10 @@ import android.content.Context
 
 object ImageUtils {
 
+    /**
+     * FourSquare API provides CategoryIcons in various sizes
+     * [getIconSize] chooses size based on Device DPI
+     */
     fun getIconSize(context: Context): String {
         val density: Float = context.resources.displayMetrics.density
         return when {
